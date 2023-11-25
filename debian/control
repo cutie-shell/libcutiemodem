@@ -1,0 +1,25 @@
+Source: libcutiemodem
+Section: libs
+Maintainer: Erik Inkinen <erik.inkinen@erikinkinen.fi>
+Priority: optional
+Build-Depends: pkg-kde-tools,
+               cmake,
+               qt6-base-dev,
+               qt6-declarative-dev,
+               libqt6dbus6,
+               pkg-config,
+Standards-Version: 4.5.1
+
+Package: libcutiemodem
+Architecture: any
+Multi-Arch: foreign
+Pre-Depends: ${misc:Pre-Depends}
+Depends: ${misc:Depends}, ${shlibs:Depends}
+Description: This package contains a modem access abstraction library for Cutie.
+
+Package: libcutiemodem-dev
+Architecture: any
+Multi-Arch: foreign
+Pre-Depends: ${misc:Pre-Depends}
+Depends: ${misc:Depends}, ${shlibs:Depends}, libcutiemodem (= ${binary:Version})
+Description: This package contains a modem access abstraction library for Cutie. (Development headers)
