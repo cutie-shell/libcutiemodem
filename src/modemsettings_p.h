@@ -12,11 +12,17 @@ class ModemSettingsPrivate : public QObject {
 public:
 	ModemSettingsPrivate(ModemSettings *q);
 
-protected:
+public slots:
+	void onNameOwnerChanged(QString name, QString oldOwner, QString newOwner);
 	void onOfonoModemAdded(QDBusObjectPath path, QVariantMap props);
 	void onOfonoModemRemoved(QDBusObjectPath path);
 
+protected:
+	void initOfonoBackend();
+	void deinitOfonoBackend();
+
 	QMap<QString,CutieModem *> m_modems;
+	QMap<QString,OfonoModem *> m_ofono_modems;
 
 	ModemSettings *q_ptr;
 };
