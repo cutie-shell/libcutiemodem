@@ -13,6 +13,9 @@ public:
 	ModemSettingsPrivate(ModemSettings *q);
 
 protected:
+	void onOfonoModemAdded(QDBusObjectPath path, QVariantMap props);
+	void onOfonoModemRemoved(QDBusObjectPath path);
+
 	QMap<QString,CutieModem *> m_modems;
 
 	ModemSettings *q_ptr;

@@ -7,6 +7,7 @@ ModemSettings::ModemSettings(QObject *parent)
 	Q_D(ModemSettings);
 	qDBusRegisterMetaType<OfonoServicePair>();
 	qDBusRegisterMetaType<OfonoServiceList>();
+	
 	QDBusReply<OfonoServiceList> ofonoModems = QDBusInterface(
 		"org.ofono",
 		"/", 
@@ -22,6 +23,20 @@ ModemSettings::ModemSettings(QObject *parent)
 
 		emit modemsChanged(d->m_modems.values());
 	}
+
+	QDBusConnection::systemBus().connect(
+		"org.ofono",
+		"/",
+		"org.ofono.Manager", 
+		"ModemAdded",
+		d, SLOT(onOfonoModemAdded(QDBusObjectPath,QVariantMap)));
+
+	QDBusConnection::systemBus().connect(
+		"org.ofono",
+		"/",
+		"org.ofono.Manager", 
+		"ModemRemoved",
+		d, SLOT(onOfonoModemRemoved(QDBusObjectPath)));
 }
 
 QList<CutieModem *> ModemSettings::modems() {
@@ -36,3 +51,18 @@ QObject *ModemSettings::provider(QQmlEngine *engine, QJSEngine *scriptEngine) {
 
 ModemSettingsPrivate::ModemSettingsPrivate(ModemSettings *q)
 	: q_ptr(q) { }
+
+void ModemSettingsPrivate::onOfonoModemAdded(QDBusObjectPath path, QVariantMap props) {
+	Q_Q(ModemSettings);
+	OfonoModem *m = new OfonoModem();
+	m->setPath(path.path());
+	m_modems.insert(path.path(), m);
+	emit q->modemsChanged(m_modems.values());
+}
+
+void ModemSettingsPrivate::onOfonoModemRemoved(QDBusObjectPath path) {
+	Q_Q(ModemSettings);
+	delete m_modems[path.path()];
+	m_modems.remove(path.path());
+	emit q->modemsChanged(m_modems.values());
+}
