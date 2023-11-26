@@ -42,6 +42,21 @@ void OfonoModem::setPath(QString path) {
 	else d->m_netData = QVariantMap();
 	emit netDataChanged(d->m_netData);
 
+	QDBusReply<OfonoServiceList> ofonoCalls = QDBusInterface(
+		"org.ofono",
+		d->m_path, 
+		"org.ofono.VoiceCallManager",
+		QDBusConnection::systemBus()
+	).call("GetCalls");
+	if (ofonoCalls.isValid()) {
+		foreach (OfonoServicePair p, ofonoCalls.value()) {
+			OfonoCall *c = new OfonoCall(this, p.first.path(), p.second);
+			d->m_calls.insert(p.first.path(), c);
+		}
+
+		emit callsChanged(d->m_calls.values());
+	}
+
 	QDBusConnection::systemBus().connect(
 		"org.ofono",
 		d->m_path, 
@@ -171,8 +186,11 @@ void OfonoModemPrivate::onCallAdded(QDBusObjectPath path, QVariantMap props) {
 	OfonoCall *call = new OfonoCall(this, path.path(), props);
 	m_calls.insert(path.path(), call);
 	emit q->newCall(call);
+	emit q->callsChanged(m_calls.values());
 }
 
 void OfonoModemPrivate::onCallRemoved(QDBusObjectPath path) {
+	Q_Q(OfonoModem);
 	m_calls.remove(path.path());
+	emit q->callsChanged(m_calls.values());
 }

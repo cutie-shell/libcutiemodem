@@ -35,6 +35,11 @@ uint CutieModem::audioMode() {
 	return d->m_audioMode;
 }
 
+QList<CutieCall*> CutieModem::calls() {
+    Q_D(CutieModem);
+    return d->m_calls.values();
+}
+
 void CutieModem::setAudioMode(uint mode) {
     QDBusInterface(
 	    "org.mobian_project.CallAudio",
