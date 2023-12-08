@@ -69,10 +69,10 @@ public:
     virtual Q_INVOKABLE void setNetProp(QString key, QVariant value) = 0;
 
 signals:
-    void pathChanged(QString);
-    void dataChanged(QVariantMap);
-    void simDataChanged(QVariantMap);
-    void netDataChanged(QVariantMap);
+    void pathChanged();
+    void dataChanged();
+    void simDataChanged();
+    void netDataChanged();
     void audioModeChanged(uint mode);
 	void incomingMessage(QString message, QVariantMap props);
 	void newCall(CutieCall* call);
@@ -137,11 +137,4 @@ public:
     Q_INVOKABLE void setProp(QString key, QVariant value) override;
     Q_INVOKABLE void setSimProp(QString key, QVariant value) override;
     Q_INVOKABLE void setNetProp(QString key, QVariant value) override;
-Q_SIGNALS:
-    void pathChanged(QString);
-    void dataChanged(QVariantMap);
-    void simDataChanged(QVariantMap);
-    void netDataChanged(QVariantMap);
-	void incomingMessage(QString message, QVariantMap props);
-	void newCall(OfonoCall* call);
 };
