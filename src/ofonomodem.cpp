@@ -107,7 +107,7 @@ void OfonoModem::setProp(QString key, QVariant value) {
 		d->m_path, 
 		"org.ofono.Modem",
 		QDBusConnection::systemBus()
-	).call("SetProperty", key, value);
+	).call("SetProperty", key, QVariant::fromValue(QDBusVariant(value)));
 }
 
 void OfonoModem::setSimProp(QString key, QVariant value) {
@@ -117,7 +117,7 @@ void OfonoModem::setSimProp(QString key, QVariant value) {
 		d->m_path, 
 		"org.ofono.SimManager",
 		QDBusConnection::systemBus()
-	).call("SetProperty", key, value);
+	).call("SetProperty", key, QVariant::fromValue(QDBusVariant(value)));
 }
 
 void OfonoModem::setNetProp(QString key, QVariant value) {
@@ -127,7 +127,7 @@ void OfonoModem::setNetProp(QString key, QVariant value) {
 		d->m_path, 
 		"org.ofono.NetworkRegistration",
 		QDBusConnection::systemBus()
-	).call("SetProperty", key, value);
+	).call("SetProperty", key, QVariant::fromValue(QDBusVariant(value)));
 }
 
 void OfonoModem::sendMessage(QString to, QString message) {
