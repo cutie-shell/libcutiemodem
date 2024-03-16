@@ -2,30 +2,43 @@
 
 CutieCall::CutieCall(QObject *parent)
 	: QObject(parent)
-	, d_ptr(new CutieCallPrivate(this)) {}
+	, d_ptr(new CutieCallPrivate(this))
+{
+}
 
 CutieCall::CutieCall(CutieCallPrivate *d, QObject *parent)
 	: QObject(parent)
-	, d_ptr(d) {}
+	, d_ptr(d)
+{
+}
 
-CutieCall::~CutieCall() {}
+CutieCall::~CutieCall()
+{
+}
 
-QString CutieCall::path() {
+QString CutieCall::path()
+{
 	Q_D(CutieCall);
 	return d->m_path;
 }
 
-QVariantMap CutieCall::data() {
+QVariantMap CutieCall::data()
+{
 	Q_D(CutieCall);
 	return d->m_data;
 }
 
-CutieModem *CutieCall::modem() {
+CutieModem *CutieCall::modem()
+{
 	Q_D(CutieCall);
 	return qobject_cast<CutieModem *>(d->parent());
 }
 
 CutieCallPrivate::CutieCallPrivate(CutieCall *q)
-	: q_ptr(q) { }
+	: q_ptr(q)
+{
+}
 
-CutieCallPrivate::~CutieCallPrivate() {}
+CutieCallPrivate::~CutieCallPrivate()
+{
+}

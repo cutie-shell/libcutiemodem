@@ -8,16 +8,16 @@
 #include "cutiemodem.h"
 
 class CutieCallPrivate : public QObject {
-    Q_OBJECT
-    Q_DECLARE_PUBLIC (CutieCall)
+	Q_OBJECT
+	Q_DECLARE_PUBLIC(CutieCall)
 
-public:
-    CutieCallPrivate(CutieCall *q);
-    ~CutieCallPrivate();
+    public:
+	CutieCallPrivate(CutieCall *q);
+	~CutieCallPrivate();
 
-protected:
-    QString m_path;
-    QVariantMap m_data;
-    
-    CutieCall *q_ptr;
+    protected:
+	QString m_path;
+	QVariantMap m_data;
+
+	CutieCall *q_ptr;
 };

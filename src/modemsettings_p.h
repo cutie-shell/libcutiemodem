@@ -7,22 +7,23 @@
 
 class ModemSettingsPrivate : public QObject {
 	Q_OBJECT
-	Q_DECLARE_PUBLIC (ModemSettings)
+	Q_DECLARE_PUBLIC(ModemSettings)
 
-public:
+    public:
 	ModemSettingsPrivate(ModemSettings *q);
 
-public slots:
-	void onNameOwnerChanged(QString name, QString oldOwner, QString newOwner);
+    public slots:
+	void onNameOwnerChanged(QString name, QString oldOwner,
+				QString newOwner);
 	void onOfonoModemAdded(QDBusObjectPath path, QVariantMap props);
 	void onOfonoModemRemoved(QDBusObjectPath path);
 
-protected:
+    protected:
 	void initOfonoBackend();
 	void deinitOfonoBackend();
 
-	QMap<QString,CutieModem *> m_modems;
-	QMap<QString,OfonoModem *> m_ofono_modems;
+	QMap<QString, CutieModem *> m_modems;
+	QMap<QString, OfonoModem *> m_ofono_modems;
 
 	ModemSettings *q_ptr;
 };

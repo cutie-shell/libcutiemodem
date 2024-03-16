@@ -9,13 +9,13 @@
 #include "cutiecall_p.h"
 
 class OfonoCallPrivate : public CutieCallPrivate {
-    Q_OBJECT
-    Q_DECLARE_PUBLIC (OfonoCall)
-public:
-    OfonoCallPrivate(OfonoCall *q);
-    ~OfonoCallPrivate();
+	Q_OBJECT
+	Q_DECLARE_PUBLIC(OfonoCall)
+    public:
+	OfonoCallPrivate(OfonoCall *q);
+	~OfonoCallPrivate();
 
-public slots:
-    void onPropertyChanged(QString name, QDBusVariant value);
-    void onDisconnectReason(QString reason);
+    public slots:
+	void onPropertyChanged(QString name, QDBusVariant value);
+	void onDisconnectReason(QString reason);
 };

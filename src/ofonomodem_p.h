@@ -9,16 +9,16 @@
 #include "cutiemodem_p.h"
 
 class OfonoModemPrivate : public CutieModemPrivate {
-    Q_OBJECT
-    Q_DECLARE_PUBLIC (OfonoModem)
-public:
-    OfonoModemPrivate(OfonoModem *q);
-    ~OfonoModemPrivate();
+	Q_OBJECT
+	Q_DECLARE_PUBLIC(OfonoModem)
+    public:
+	OfonoModemPrivate(OfonoModem *q);
+	~OfonoModemPrivate();
 
-public slots:
-    void onPropertyChanged(QString name, QDBusVariant value);
-    void onSimPropertyChanged(QString name, QDBusVariant value);
-    void onNetPropertyChanged(QString name, QDBusVariant value);
+    public slots:
+	void onPropertyChanged(QString name, QDBusVariant value);
+	void onSimPropertyChanged(QString name, QDBusVariant value);
+	void onNetPropertyChanged(QString name, QDBusVariant value);
 	void onIncomingMessage(QString message, QVariantMap props);
 	void onCallAdded(QDBusObjectPath path, QVariantMap props);
 	void onCallRemoved(QDBusObjectPath path);
