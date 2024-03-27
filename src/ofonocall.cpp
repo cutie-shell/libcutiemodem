@@ -22,12 +22,6 @@ OfonoCall::~OfonoCall()
 {
 }
 
-QVariantMap OfonoCall::data()
-{
-	Q_D(OfonoCall);
-	return d->m_data;
-}
-
 QString OfonoCall::lineIdentification()
 {
 	Q_D(OfonoCall);
@@ -86,7 +80,6 @@ void OfonoCallPrivate::onPropertyChanged(QString name, QDBusVariant value)
 {
 	Q_Q(OfonoCall);
 	m_data.insert(name, value.variant());
-	emit q->dataChanged(m_data);
 
 	if ("LineIdentification" == name)
 		emit q->lineIdentificationChanged();

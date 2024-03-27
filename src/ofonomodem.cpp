@@ -10,24 +10,6 @@ OfonoModem::~OfonoModem()
 {
 }
 
-QVariantMap OfonoModem::data()
-{
-	Q_D(OfonoModem);
-	return d->m_data;
-}
-
-QVariantMap OfonoModem::simData()
-{
-	Q_D(OfonoModem);
-	return d->m_simData;
-}
-
-QVariantMap OfonoModem::netData()
-{
-	Q_D(OfonoModem);
-	return d->m_netData;
-}
-
 bool OfonoModem::powered()
 {
 	Q_D(OfonoModem);
@@ -149,7 +131,6 @@ void OfonoModem::setPath(QString path)
 		d->m_data = props.value();
 	else
 		d->m_data = QVariantMap();
-	emit dataChanged();
 
 	QDBusReply<QVariantMap> simProps =
 		QDBusInterface("org.ofono", d->m_path, "org.ofono.SimManager",
@@ -159,7 +140,6 @@ void OfonoModem::setPath(QString path)
 		d->m_simData = simProps.value();
 	else
 		d->m_simData = QVariantMap();
-	emit simDataChanged();
 
 	QDBusReply<QVariantMap> netProps =
 		QDBusInterface("org.ofono", d->m_path,
@@ -170,7 +150,6 @@ void OfonoModem::setPath(QString path)
 		d->m_netData = netProps.value();
 	else
 		d->m_netData = QVariantMap();
-	emit netDataChanged();
 
 	QDBusReply<OfonoServiceList> ofonoCalls =
 		QDBusInterface("org.ofono", d->m_path,
@@ -281,7 +260,6 @@ void OfonoModemPrivate::onPropertyChanged(QString name, QDBusVariant value)
 {
 	Q_Q(OfonoModem);
 	m_data.insert(name, value.variant());
-	emit q->dataChanged();
 
 	if ("Powered" == name)
 		emit q->poweredChanged();
@@ -293,14 +271,12 @@ void OfonoModemPrivate::onSimPropertyChanged(QString name, QDBusVariant value)
 {
 	Q_Q(OfonoModem);
 	m_simData.insert(name, value.variant());
-	emit q->simDataChanged();
 }
 
 void OfonoModemPrivate::onNetPropertyChanged(QString name, QDBusVariant value)
 {
 	Q_Q(OfonoModem);
 	m_netData.insert(name, value.variant());
-	emit q->netDataChanged();
 
 	if ("Status" == name)
 		emit q->networkStatus();

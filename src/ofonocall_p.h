@@ -15,7 +15,6 @@ class OfonoCall : public CutieCall {
 	OfonoCall(QObject *parent, QString path, QVariantMap props);
 	~OfonoCall();
 
-	QVariantMap data() override;
 	QString lineIdentification() override;
 	CallState state() override;
 

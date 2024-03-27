@@ -15,10 +15,6 @@ class OfonoModem : public CutieModem {
 	OfonoModem(QObject *parent = 0);
 	~OfonoModem();
 
-	QVariantMap data() override;
-	QVariantMap simData() override;
-	QVariantMap netData() override;
-
 	bool powered() override;
 	bool online() override;
 	QString name() override;
@@ -41,9 +37,11 @@ class OfonoModem : public CutieModem {
 	Q_INVOKABLE void sendMessage(QString to, QString message) override;
 	Q_INVOKABLE QString dial(QString to,
 				 QString hideID = QString()) override;
-	Q_INVOKABLE void setProp(QString key, QVariant value) override;
-	Q_INVOKABLE void setSimProp(QString key, QVariant value) override;
-	Q_INVOKABLE void setNetProp(QString key, QVariant value) override;
+
+	protected:
+	void setProp(QString key, QVariant value);
+	void setSimProp(QString key, QVariant value);
+	void setNetProp(QString key, QVariant value);
 };
 
 class OfonoModemPrivate : public CutieModemPrivate {

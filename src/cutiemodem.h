@@ -12,7 +12,6 @@ class CutieModem;
 class CutieCall : public QObject {
 	Q_OBJECT
 	Q_DECLARE_PRIVATE(CutieCall);
-	Q_PROPERTY(QVariantMap data READ data() NOTIFY dataChanged);
 	Q_PROPERTY(CutieModem *modem READ modem());
 	Q_PROPERTY(QString lineIdentification READ lineIdentification() NOTIFY lineIdentificationChanged)
 	Q_PROPERTY(CallState state READ state() NOTIFY stateChanged);
@@ -33,7 +32,6 @@ class CutieCall : public QObject {
 	CutieCall(QObject *parent = 0);
 	~CutieCall();
 
-	virtual QVariantMap data() = 0;
 	CutieModem *modem();
 	virtual QString lineIdentification() = 0;
 	virtual CallState state() = 0;
@@ -42,7 +40,6 @@ class CutieCall : public QObject {
 	virtual Q_INVOKABLE void hangup() = 0;
 
     signals:
-	void dataChanged(QVariantMap);
 	void lineIdentificationChanged();
 	void stateChanged();
 	void disconnected(QString);
@@ -55,9 +52,6 @@ class CutieCall : public QObject {
 class CutieModem : public QObject {
 	Q_OBJECT
 	Q_DECLARE_PRIVATE(CutieModem)
-	Q_PROPERTY(QVariantMap data READ data() NOTIFY dataChanged);
-	Q_PROPERTY(QVariantMap simData READ simData() NOTIFY simDataChanged);
-	Q_PROPERTY(QVariantMap netData READ netData() NOTIFY netDataChanged);
 	Q_PROPERTY(uint audioMode READ audioMode()
 			   WRITE setAudioMode NOTIFY audioModeChanged);
 	Q_PROPERTY(QList<CutieCall *> calls READ calls() NOTIFY callsChanged);
@@ -98,10 +92,6 @@ class CutieModem : public QObject {
 	CutieModem(QObject *parent = 0);
 	~CutieModem();
 
-	virtual QVariantMap data() = 0;
-	virtual QVariantMap simData() = 0;
-	virtual QVariantMap netData() = 0;
-
 	uint audioMode();
 	void setAudioMode(uint mode);
 	QList<CutieCall *> calls();
@@ -126,15 +116,8 @@ class CutieModem : public QObject {
 	virtual Q_INVOKABLE void sendMessage(QString to, QString message) = 0;
 	virtual Q_INVOKABLE QString dial(QString to,
 					 QString hideID = QString()) = 0;
-	virtual Q_INVOKABLE void setProp(QString key, QVariant value) = 0;
-	virtual Q_INVOKABLE void setSimProp(QString key, QVariant value) = 0;
-	virtual Q_INVOKABLE void setNetProp(QString key, QVariant value) = 0;
 
     signals:
-	void dataChanged();
-	void simDataChanged();
-	void netDataChanged();
-
 	void poweredChanged();
 	void onlineChanged();
 
