@@ -22,10 +22,6 @@ class CutieModemPrivate : public QObject {
     protected:
 	void init();
 
-	QString m_path;
-	QVariantMap m_data;
-	QVariantMap m_simData;
-	QVariantMap m_netData;
 	QMap<QString, CutieCall *> m_calls;
 	uint m_audioMode;
 

@@ -16,8 +16,5 @@ class CutieCallPrivate : public QObject {
 	~CutieCallPrivate();
 
     protected:
-	QString m_path;
-	QVariantMap m_data;
-
 	CutieCall *q_ptr;
 };

@@ -11,16 +11,33 @@
 class OfonoModem : public CutieModem {
 	Q_OBJECT
 	Q_DECLARE_PRIVATE(OfonoModem)
-	Q_PROPERTY(QString path READ path() NOTIFY pathChanged);
-	Q_PROPERTY(QVariantMap data READ data() NOTIFY dataChanged);
-	Q_PROPERTY(QVariantMap simData READ simData() NOTIFY simDataChanged);
-	Q_PROPERTY(QVariantMap netData READ netData() NOTIFY netDataChanged);
-
     public:
 	OfonoModem(QObject *parent = 0);
 	~OfonoModem();
 
-	void setPath(QString path) override;
+	QVariantMap data() override;
+	QVariantMap simData() override;
+	QVariantMap netData() override;
+
+	bool powered() override;
+	bool online() override;
+	QString name() override;
+	QString manufacturer() override;
+	QString model() override;
+	QString serial() override;
+
+	QString networkCode() override;
+	QString networkCountryCode() override;
+	QString networkName() override;
+	uint networkStrength() override;
+	NetworkStatus networkStatus() override;
+	NetworkTechnology networkTechnology() override;
+
+	void setPath(QString path);
+
+	void setPowered(bool powered) override;
+	void setOnline(bool online) override;
+	
 	Q_INVOKABLE void sendMessage(QString to, QString message) override;
 	Q_INVOKABLE QString dial(QString to,
 				 QString hideID = QString()) override;
@@ -43,6 +60,12 @@ class OfonoModemPrivate : public CutieModemPrivate {
 	void onIncomingMessage(QString message, QVariantMap props);
 	void onCallAdded(QDBusObjectPath path, QVariantMap props);
 	void onCallRemoved(QDBusObjectPath path);
+
+	protected:
+	QString m_path;
+	QVariantMap m_data;
+	QVariantMap m_simData;
+	QVariantMap m_netData;
 };
 
 typedef QPair<QDBusObjectPath, QVariantMap> OfonoServicePair;

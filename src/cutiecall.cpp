@@ -16,18 +16,6 @@ CutieCall::~CutieCall()
 {
 }
 
-QString CutieCall::path()
-{
-	Q_D(CutieCall);
-	return d->m_path;
-}
-
-QVariantMap CutieCall::data()
-{
-	Q_D(CutieCall);
-	return d->m_data;
-}
-
 CutieModem *CutieCall::modem()
 {
 	Q_D(CutieCall);

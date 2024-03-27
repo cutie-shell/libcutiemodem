@@ -10,6 +10,132 @@ OfonoModem::~OfonoModem()
 {
 }
 
+QVariantMap OfonoModem::data()
+{
+	Q_D(OfonoModem);
+	return d->m_data;
+}
+
+QVariantMap OfonoModem::simData()
+{
+	Q_D(OfonoModem);
+	return d->m_simData;
+}
+
+QVariantMap OfonoModem::netData()
+{
+	Q_D(OfonoModem);
+	return d->m_netData;
+}
+
+bool OfonoModem::powered()
+{
+	Q_D(OfonoModem);
+	return qdbus_cast<bool>(d->m_data["Powered"]);
+}
+
+bool OfonoModem::online()
+{
+	Q_D(OfonoModem);
+	return qdbus_cast<bool>(d->m_data["Online"]);
+}
+
+QString OfonoModem::name()
+{
+	Q_D(OfonoModem);
+	return qdbus_cast<QString>(d->m_data["Name"]);
+}
+
+QString OfonoModem::manufacturer()
+{
+	Q_D(OfonoModem);
+	return qdbus_cast<QString>(d->m_data["Manufacturer"]);
+}
+
+QString OfonoModem::model()
+{
+	Q_D(OfonoModem);
+	return qdbus_cast<QString>(d->m_data["Model"]);
+}
+
+QString OfonoModem::serial()
+{
+	Q_D(OfonoModem);
+	return qdbus_cast<QString>(d->m_data["Serial"]);
+}
+
+QString OfonoModem::networkCode()
+{
+	Q_D(OfonoModem);
+	return qdbus_cast<QString>(d->m_netData["MobileNetworkCode"]);
+}
+
+QString OfonoModem::networkCountryCode()
+{
+	Q_D(OfonoModem);
+	return qdbus_cast<QString>(d->m_netData["MobileCountryCode"]);
+}
+
+QString OfonoModem::networkName()
+{
+	Q_D(OfonoModem);
+	return qdbus_cast<QString>(d->m_netData["Name"]);
+}
+
+uint OfonoModem::networkStrength()
+{
+	Q_D(OfonoModem);
+	return qdbus_cast<uint>(d->m_netData["Strength"]);
+}
+
+CutieModem::NetworkStatus OfonoModem::networkStatus()
+{
+	Q_D(OfonoModem);
+	QString statusString = qdbus_cast<QString>(d->m_netData["Status"]);
+
+	if ("unregistered" == statusString)
+		return NetworkStatus::Unregistered;
+	else if ("registered" == statusString)
+		return NetworkStatus::Registered;
+	else if ("searching" == statusString)
+		return NetworkStatus::Searching;
+	else if ("denied" == statusString)
+		return NetworkStatus::Denied;
+	else if ("unknown" == statusString)
+		return NetworkStatus::Unknown;
+	else if ("roaming" == statusString)
+		return NetworkStatus::Roaming;
+
+	return NetworkStatus::Invalid;
+}
+
+CutieModem::NetworkTechnology OfonoModem::networkTechnology()
+{
+	Q_D(OfonoModem);
+	QString technologyString = qdbus_cast<QString>(d->m_netData["Technology"]);
+
+	if ("gsm" == technologyString)
+		return NetworkTechnology::GSM;
+	else if ("edge" == technologyString)
+		return NetworkTechnology::EDGE;
+	else if ("umts" == technologyString)
+		return NetworkTechnology::UMTS;
+	else if ("hspa" == technologyString)
+		return NetworkTechnology::HSPA;
+	else if ("lte" == technologyString)
+		return NetworkTechnology::LTE;
+
+	return NetworkTechnology::Invalid;
+}
+
+void OfonoModem::setPowered(bool powered) {
+	setProp("Powered", QVariant(powered));
+}
+
+void OfonoModem::setOnline(bool online) {
+	setProp("Online", QVariant(online));
+}
+
 void OfonoModem::setPath(QString path)
 {
 	Q_D(OfonoModem);
@@ -156,6 +282,11 @@ void OfonoModemPrivate::onPropertyChanged(QString name, QDBusVariant value)
 	Q_Q(OfonoModem);
 	m_data.insert(name, value.variant());
 	emit q->dataChanged();
+
+	if ("Powered" == name)
+		emit q->poweredChanged();
+	else if ("Online" == name)
+		emit q->onlineChanged();
 }
 
 void OfonoModemPrivate::onSimPropertyChanged(QString name, QDBusVariant value)
@@ -170,6 +301,19 @@ void OfonoModemPrivate::onNetPropertyChanged(QString name, QDBusVariant value)
 	Q_Q(OfonoModem);
 	m_netData.insert(name, value.variant());
 	emit q->netDataChanged();
+
+	if ("Status" == name)
+		emit q->networkStatus();
+	else if ("MobileCountryCode" == name)
+		emit q->networkCountryCodeChanged();
+	else if ("MobileNetworkCode" == name)
+		emit q->networkCodeChanged();
+	else if ("Technology" == name)
+		emit q->networkTechnologyChanged();
+	else if ("Name" == name)
+		emit q->networkNameChanged();
+	else if ("Strength" == name)
+		emit q->networkStrengthChanged();
 }
 
 void OfonoModemPrivate::onIncomingMessage(QString message, QVariantMap props)

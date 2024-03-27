@@ -16,30 +16,6 @@ CutieModem::~CutieModem()
 {
 }
 
-QString CutieModem::path()
-{
-	Q_D(CutieModem);
-	return d->m_path;
-}
-
-QVariantMap CutieModem::data()
-{
-	Q_D(CutieModem);
-	return d->m_data;
-}
-
-QVariantMap CutieModem::simData()
-{
-	Q_D(CutieModem);
-	return d->m_simData;
-}
-
-QVariantMap CutieModem::netData()
-{
-	Q_D(CutieModem);
-	return d->m_netData;
-}
-
 uint CutieModem::audioMode()
 {
 	Q_D(CutieModem);

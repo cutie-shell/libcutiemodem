@@ -22,6 +22,41 @@ OfonoCall::~OfonoCall()
 {
 }
 
+QVariantMap OfonoCall::data()
+{
+	Q_D(OfonoCall);
+	return d->m_data;
+}
+
+QString OfonoCall::lineIdentification()
+{
+	Q_D(OfonoCall);
+	return qdbus_cast<QString>(d->m_data["LineIdentification"]);
+}
+
+CutieCall::CallState OfonoCall::state()
+{
+	Q_D(OfonoCall);
+	QString stateString = qdbus_cast<QString>(d->m_data["State"]);
+
+	if ("active" == stateString)
+		return CallState::Active;
+	else if ("held" == stateString)
+		return CallState::Held;
+	else if ("dialing" == stateString)
+		return CallState::Dialing;
+	else if ("alerting" == stateString)
+		return CallState::Alerting;
+	else if ("incoming" == stateString)
+		return CallState::Incoming;
+	else if ("waiting" == stateString)
+		return CallState::Waiting;
+	else if ("disconnected" == stateString)
+		return CallState::Disconnected;
+
+	return CallState::Invalid;
+}
+
 void OfonoCall::answer()
 {
 	Q_D(OfonoCall);
@@ -52,6 +87,11 @@ void OfonoCallPrivate::onPropertyChanged(QString name, QDBusVariant value)
 	Q_Q(OfonoCall);
 	m_data.insert(name, value.variant());
 	emit q->dataChanged(m_data);
+
+	if ("LineIdentification" == name)
+		emit q->lineIdentificationChanged();
+	else if ("State" == name)
+		emit q->stateChanged();
 }
 
 void OfonoCallPrivate::onDisconnectReason(QString reason)
