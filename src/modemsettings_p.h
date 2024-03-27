@@ -4,6 +4,7 @@
 #include <QDBusReply>
 #include <QDBusMetaType>
 #include "cutiemodem.h"
+#include "ofonomodem_p.h"
 
 class ModemSettingsPrivate : public QObject {
 	Q_OBJECT

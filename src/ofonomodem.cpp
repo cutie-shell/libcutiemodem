@@ -1,4 +1,5 @@
 #include "ofonomodem_p.h"
+#include "ofonocall_p.h"
 
 OfonoModem::OfonoModem(QObject *parent)
 	: CutieModem(new OfonoModemPrivate(this), parent)
