@@ -48,7 +48,7 @@ CutieCall::CallState OfonoCall::state()
 	else if ("disconnected" == stateString)
 		return CallState::Disconnected;
 
-	return CallState::Invalid;
+	return CallState::InvalidState;
 }
 
 void OfonoCall::answer()

@@ -25,7 +25,7 @@ class CutieCall : public QObject {
 		Incoming,
 		Waiting,
 		Disconnected,
-		Invalid
+		InvalidState
 	};
 	Q_ENUM(CallState)
 
@@ -76,7 +76,7 @@ class CutieModem : public QObject {
 		Denied,
 		Unknown,
 		Roaming,
-		Invalid
+		InvalidStatus
 	};
 	Q_ENUM(NetworkStatus)
 	enum class NetworkTechnology {
@@ -85,7 +85,7 @@ class CutieModem : public QObject {
 		UMTS,
 		HSPA,
 		LTE,
-		Invalid
+		InvalidTechnology
 	};
 	Q_ENUM(NetworkTechnology)
 

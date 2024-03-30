@@ -88,7 +88,7 @@ CutieModem::NetworkStatus OfonoModem::networkStatus()
 	else if ("roaming" == statusString)
 		return NetworkStatus::Roaming;
 
-	return NetworkStatus::Invalid;
+	return NetworkStatus::InvalidStatus;
 }
 
 CutieModem::NetworkTechnology OfonoModem::networkTechnology()
@@ -107,7 +107,7 @@ CutieModem::NetworkTechnology OfonoModem::networkTechnology()
 	else if ("lte" == technologyString)
 		return NetworkTechnology::LTE;
 
-	return NetworkTechnology::Invalid;
+	return NetworkTechnology::InvalidTechnology;
 }
 
 void OfonoModem::setPowered(bool powered) {
