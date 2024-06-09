@@ -1,5 +1,6 @@
 #include "modemsettings_p.h"
 #include "backend/ofono/ofono_p.h"
+#include "backend/mm/mm_p.h"
 
 Q_LOGGING_CATEGORY(modemLog, "cutiemodem")
 
@@ -34,6 +35,8 @@ ModemSettingsPrivate::ModemSettingsPrivate(ModemSettings *q)
 		Backend *backend = nullptr;
 		if (b == "ofono")
 			backend = new OfonoBackend(this);
+		else if (b == "mm")
+			backend = new MMBackend(this);
 		else {
 			qCWarning(modemLog)
 				<< "Unknown backend requested:" << b;
