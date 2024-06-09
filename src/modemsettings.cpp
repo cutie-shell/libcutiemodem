@@ -28,7 +28,7 @@ ModemSettingsPrivate::ModemSettingsPrivate(ModemSettings *q)
 {
 	QByteArray requested = qgetenv("CUTIEMODEM_BACKENDS");
 	if (requested.isNull())
-		requested = "ofono";
+		requested = "mm";
 
 	QStringList backends = QString::fromUtf8(requested).split(';');
 	foreach(const QString &b, backends) {
