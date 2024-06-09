@@ -5,8 +5,7 @@
 #include <QDBusConnection>
 #include <QDBusReply>
 #include <QDBusMetaType>
-#include "cutiemodem.h"
-#include "cutiecall_p.h"
+#include "../../cutiecall_p.h"
 
 class OfonoCall : public CutieCall {
 	Q_OBJECT
@@ -33,7 +32,7 @@ class OfonoCallPrivate : public CutieCallPrivate {
 	void onPropertyChanged(QString name, QDBusVariant value);
 	void onDisconnectReason(QString reason);
 
-	protected:
+    protected:
 	QString m_path;
 	QVariantMap m_data;
 };

@@ -5,8 +5,7 @@
 #include <QDBusConnection>
 #include <QDBusReply>
 #include <QDBusMetaType>
-#include "cutiemodem.h"
-#include "cutiemodem_p.h"
+#include "../../cutiemodem_p.h"
 
 class OfonoModem : public CutieModem {
 	Q_OBJECT
@@ -33,12 +32,12 @@ class OfonoModem : public CutieModem {
 
 	void setPowered(bool powered) override;
 	void setOnline(bool online) override;
-	
+
 	Q_INVOKABLE void sendMessage(QString to, QString message) override;
 	Q_INVOKABLE QString dial(QString to,
 				 QString hideID = QString()) override;
 
-	protected:
+    protected:
 	void setProp(QString key, QVariant value);
 	void setSimProp(QString key, QVariant value);
 	void setNetProp(QString key, QVariant value);
@@ -59,7 +58,7 @@ class OfonoModemPrivate : public CutieModemPrivate {
 	void onCallAdded(QDBusObjectPath path, QVariantMap props);
 	void onCallRemoved(QDBusObjectPath path);
 
-	protected:
+    protected:
 	QString m_path;
 	QVariantMap m_data;
 	QVariantMap m_simData;

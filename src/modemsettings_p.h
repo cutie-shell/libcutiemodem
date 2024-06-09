@@ -3,8 +3,9 @@
 #include <QDBusConnection>
 #include <QDBusReply>
 #include <QDBusMetaType>
-#include "cutiemodem.h"
-#include "ofonomodem_p.h"
+#include "backend/backend.h"
+
+Q_DECLARE_LOGGING_CATEGORY(modemLog)
 
 class ModemSettingsPrivate : public QObject {
 	Q_OBJECT
@@ -13,18 +14,12 @@ class ModemSettingsPrivate : public QObject {
     public:
 	ModemSettingsPrivate(ModemSettings *q);
 
-    public slots:
-	void onNameOwnerChanged(QString name, QString oldOwner,
-				QString newOwner);
-	void onOfonoModemAdded(QDBusObjectPath path, QVariantMap props);
-	void onOfonoModemRemoved(QDBusObjectPath path);
+    protected slots:
+	void onModemAdded(CutieModem *modem);
+	void onModemRemoved(CutieModem *modem);
 
     protected:
-	void initOfonoBackend();
-	void deinitOfonoBackend();
-
-	QMap<QString, CutieModem *> m_modems;
-	QMap<QString, OfonoModem *> m_ofono_modems;
-
+	QList<CutieModem *> m_modems;
+	QList<Backend *> m_backends;
 	ModemSettings *q_ptr;
 };

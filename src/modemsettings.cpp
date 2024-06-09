@@ -1,32 +1,19 @@
 #include "modemsettings_p.h"
-#include "ofonomodem_p.h"
+#include "backend/ofono/ofono_p.h"
+
+Q_LOGGING_CATEGORY(modemLog, "cutiemodem")
 
 ModemSettings::ModemSettings(QObject *parent)
 	: QObject(parent)
 	, d_ptr(new ModemSettingsPrivate(this))
 {
 	Q_D(ModemSettings);
-	qDBusRegisterMetaType<OfonoServicePair>();
-	qDBusRegisterMetaType<OfonoServiceList>();
-
-	QDBusReply<bool> ofonoHasOwner =
-		QDBusInterface("org.freedesktop.DBus", "/org/freedesktop/DBus",
-			       "org.freedesktop.DBus",
-			       QDBusConnection::systemBus())
-			.call("NameHasOwner", "org.ofono");
-	if (ofonoHasOwner.isValid() && ofonoHasOwner.value())
-		d->initOfonoBackend();
-
-	QDBusConnection::systemBus().connect(
-		"org.freedesktop.DBus", "/org/freedesktop/DBus",
-		"org.freedesktop.DBus", "NameOwnerChanged", d,
-		SLOT(onNameOwnerChanged(QString, QString, QString)));
 }
 
 QList<CutieModem *> ModemSettings::modems()
 {
 	Q_D(ModemSettings);
-	return d->m_modems.values();
+	return d->m_modems;
 }
 
 QObject *ModemSettings::provider(QQmlEngine *engine, QJSEngine *scriptEngine)
@@ -38,75 +25,42 @@ QObject *ModemSettings::provider(QQmlEngine *engine, QJSEngine *scriptEngine)
 ModemSettingsPrivate::ModemSettingsPrivate(ModemSettings *q)
 	: q_ptr(q)
 {
-}
+	QByteArray requested = qgetenv("CUTIEMODEM_BACKENDS");
+	if (requested.isNull())
+		requested = "ofono";
 
-void ModemSettingsPrivate::initOfonoBackend()
-{
-	Q_Q(ModemSettings);
-	QDBusReply<OfonoServiceList> ofonoModems =
-		QDBusInterface("org.ofono", "/", "org.ofono.Manager",
-			       QDBusConnection::systemBus())
-			.call("GetModems");
-	if (ofonoModems.isValid()) {
-		foreach(OfonoServicePair p, ofonoModems.value()) {
-			OfonoModem *m = new OfonoModem();
-			m->setPath(p.first.path());
-			m_ofono_modems.insert(p.first.path(), m);
-			m_modems.insert(p.first.path(), m);
+	QStringList backends = QString::fromUtf8(requested).split(';');
+	foreach(const QString &b, backends) {
+		Backend *backend = nullptr;
+		if (b == "ofono")
+			backend = new OfonoBackend(this);
+		else {
+			qCWarning(modemLog)
+				<< "Unknown backend requested:" << b;
+			continue;
 		}
 
-		emit q->modemsChanged(m_modems.values());
-	}
-
-	QDBusConnection::systemBus().connect(
-		"org.ofono", "/", "org.ofono.Manager", "ModemAdded", this,
-		SLOT(onOfonoModemAdded(QDBusObjectPath, QVariantMap)));
-
-	QDBusConnection::systemBus().connect(
-		"org.ofono", "/", "org.ofono.Manager", "ModemRemoved", this,
-		SLOT(onOfonoModemRemoved(QDBusObjectPath)));
-}
-
-void ModemSettingsPrivate::deinitOfonoBackend()
-{
-	for (QString m : m_ofono_modems.keys()) {
-		delete m_ofono_modems[m];
-		m_ofono_modems.remove(m);
-		m_modems.remove(m);
+		connect(backend, &Backend::modemAdded, this,
+			&ModemSettingsPrivate::onModemAdded);
+		connect(backend, &Backend::modemRemoved, this,
+			&ModemSettingsPrivate::onModemRemoved);
+		backend->init();
+		m_backends << backend;
 	}
 }
 
-void ModemSettingsPrivate::onNameOwnerChanged(QString name, QString oldOwner,
-					      QString newOwner)
-{
-	if (name == "org.ofono") {
-		if (newOwner != "" && oldOwner != "") {
-			deinitOfonoBackend();
-			initOfonoBackend();
-		} else if (oldOwner != "") {
-			deinitOfonoBackend();
-		} else {
-			initOfonoBackend();
-		}
-	}
-}
-
-void ModemSettingsPrivate::onOfonoModemAdded(QDBusObjectPath path,
-					     QVariantMap props)
+void ModemSettingsPrivate::onModemAdded(CutieModem *modem)
 {
 	Q_Q(ModemSettings);
-	OfonoModem *m = new OfonoModem();
-	m->setPath(path.path());
-	m_ofono_modems.insert(path.path(), m);
-	m_modems.insert(path.path(), m);
-	emit q->modemsChanged(m_modems.values());
+	m_modems << modem;
+	emit q->modemAdded(modem);
+	emit q->modemsChanged(m_modems);
 }
 
-void ModemSettingsPrivate::onOfonoModemRemoved(QDBusObjectPath path)
+void ModemSettingsPrivate::onModemRemoved(CutieModem *modem)
 {
 	Q_Q(ModemSettings);
-	m_ofono_modems.remove(path.path());
-	m_modems.remove(path.path());
-	delete m_modems[path.path()];
-	emit q->modemsChanged(m_modems.values());
+	m_modems.removeOne(modem);
+	emit q->modemRemoved(modem);
+	emit q->modemsChanged(m_modems);
 }

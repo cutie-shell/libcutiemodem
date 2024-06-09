@@ -94,7 +94,8 @@ CutieModem::NetworkStatus OfonoModem::networkStatus()
 CutieModem::NetworkTechnology OfonoModem::networkTechnology()
 {
 	Q_D(OfonoModem);
-	QString technologyString = qdbus_cast<QString>(d->m_netData["Technology"]);
+	QString technologyString =
+		qdbus_cast<QString>(d->m_netData["Technology"]);
 
 	if ("gsm" == technologyString)
 		return NetworkTechnology::GSM;
@@ -110,11 +111,13 @@ CutieModem::NetworkTechnology OfonoModem::networkTechnology()
 	return NetworkTechnology::InvalidTechnology;
 }
 
-void OfonoModem::setPowered(bool powered) {
+void OfonoModem::setPowered(bool powered)
+{
 	setProp("Powered", QVariant(powered));
 }
 
-void OfonoModem::setOnline(bool online) {
+void OfonoModem::setOnline(bool online)
+{
 	setProp("Online", QVariant(online));
 }
 

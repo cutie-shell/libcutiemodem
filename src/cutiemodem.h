@@ -149,6 +149,8 @@ class ModemSettings : public QObject {
 	static QObject *provider(QQmlEngine *engine, QJSEngine *scriptEngine);
 
     signals:
+	void modemAdded(CutieModem *modem);
+	void modemRemoved(CutieModem *modem);
 	void modemsChanged(QList<CutieModem *> modems);
 
     protected:

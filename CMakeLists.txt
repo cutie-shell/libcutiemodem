@@ -11,8 +11,13 @@ set(lib_SOURCES
     src/cutiemodem.cpp
     src/cutiecall.cpp
     src/modemsettings.cpp
-    src/ofonocall.cpp
-    src/ofonomodem.cpp)
+    src/backend/backend.h
+    src/backend/ofono/ofono_p.h
+    src/backend/ofono/ofono.cpp
+    src/backend/ofono/ofonocall_p.h
+    src/backend/ofono/ofonocall.cpp
+    src/backend/ofono/ofonomodem_p.h
+    src/backend/ofono/ofonomodem.cpp)
 
 qt6_add_library(cutiemodem
     SHARED ${lib_SOURCES}
