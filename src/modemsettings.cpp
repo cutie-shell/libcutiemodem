@@ -46,6 +46,8 @@ ModemSettingsPrivate::ModemSettingsPrivate(ModemSettings *q)
 			&ModemSettingsPrivate::onModemRemoved);
 		backend->init();
 		m_backends << backend;
+
+		qCInfo(modemLog) << "Backend" << b << "loaded";
 	}
 }
 
@@ -53,6 +55,8 @@ void ModemSettingsPrivate::onModemAdded(CutieModem *modem)
 {
 	Q_Q(ModemSettings);
 	m_modems << modem;
+
+	qCInfo(modemLog) << "Modem added:" << modem->name();
 	emit q->modemAdded(modem);
 	emit q->modemsChanged(m_modems);
 }
@@ -61,6 +65,8 @@ void ModemSettingsPrivate::onModemRemoved(CutieModem *modem)
 {
 	Q_Q(ModemSettings);
 	m_modems.removeOne(modem);
+
+	qCInfo(modemLog) << "Modem removed:" << modem->name();
 	emit q->modemRemoved(modem);
 	emit q->modemsChanged(m_modems);
 }

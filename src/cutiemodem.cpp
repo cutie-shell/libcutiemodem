@@ -77,6 +77,7 @@ void CutieModemPrivate::onCallAudioPropertiesChanged(
 			m_audioMode =
 				qdbus_cast<uint>(updated.value("AudioMode"));
 			emit q->audioModeChanged(m_audioMode);
+			qCInfo(modemLog) << "Audio mode changed:" << m_audioMode;
 		}
 	};
 }

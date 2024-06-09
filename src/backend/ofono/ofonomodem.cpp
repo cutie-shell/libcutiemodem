@@ -167,7 +167,8 @@ void OfonoModem::setPath(QString path)
 		}
 
 		emit callsChanged(d->m_calls.values());
-	}
+	} else
+		qCWarning(ofonoModemLog) << "Failed to get calls from" << d->m_path;
 
 	QDBusConnection::systemBus().connect(
 		"org.ofono", d->m_path, "org.ofono.Modem", "PropertyChanged", d,
@@ -232,6 +233,7 @@ void OfonoModem::setNetProp(QString key, QVariant value)
 void OfonoModem::sendMessage(QString to, QString message)
 {
 	Q_D(OfonoModem);
+	qCDebug(ofonoModemLog) << "Sending message to" << to << ":" << message;
 	QDBusInterface("org.ofono", d->m_path, "org.ofono.MessageManager",
 		       QDBusConnection::systemBus())
 		.call("SendMessage", to, message);
@@ -240,13 +242,16 @@ void OfonoModem::sendMessage(QString to, QString message)
 QString OfonoModem::dial(QString to, QString hideID)
 {
 	Q_D(OfonoModem);
+	qCDebug(ofonoModemLog) << "Dialing" << to;
 	QDBusReply<QDBusObjectPath> path =
 		QDBusInterface("org.ofono", d->m_path,
 			       "org.ofono.VoiceCallManager",
 			       QDBusConnection::systemBus())
 			.call("Dial", to, hideID);
+
 	if (path.isValid())
 		return path.value().path();
+	qCWarning(ofonoModemLog) << "Failed to dial" << to;
 	return QString();
 }
 
@@ -262,6 +267,7 @@ OfonoModemPrivate::~OfonoModemPrivate()
 void OfonoModemPrivate::onPropertyChanged(QString name, QDBusVariant value)
 {
 	Q_Q(OfonoModem);
+	qCDebug(ofonoModemLog) << "Modem property changed:" << name << value.variant();
 	m_data.insert(name, value.variant());
 
 	if ("Powered" == name)
@@ -273,12 +279,14 @@ void OfonoModemPrivate::onPropertyChanged(QString name, QDBusVariant value)
 void OfonoModemPrivate::onSimPropertyChanged(QString name, QDBusVariant value)
 {
 	Q_Q(OfonoModem);
+	qCDebug(ofonoModemLog) << "SIM property changed:" << name << value.variant();
 	m_simData.insert(name, value.variant());
 }
 
 void OfonoModemPrivate::onNetPropertyChanged(QString name, QDBusVariant value)
 {
 	Q_Q(OfonoModem);
+	qCDebug(ofonoModemLog) << "Network property changed:" << name << value.variant();
 	m_netData.insert(name, value.variant());
 
 	if ("Status" == name)
@@ -298,12 +306,14 @@ void OfonoModemPrivate::onNetPropertyChanged(QString name, QDBusVariant value)
 void OfonoModemPrivate::onIncomingMessage(QString message, QVariantMap props)
 {
 	Q_Q(OfonoModem);
+	qCDebug(ofonoModemLog) << "Incoming message:" << message << props;
 	emit q->incomingMessage(message, props);
 }
 
 void OfonoModemPrivate::onCallAdded(QDBusObjectPath path, QVariantMap props)
 {
 	Q_Q(OfonoModem);
+	qCDebug(ofonoModemLog) << "Call added:" << path.path() << props;
 	OfonoCall *call = new OfonoCall(this, path.path(), props);
 	m_calls.insert(path.path(), call);
 	emit q->newCall(call);
@@ -313,6 +323,7 @@ void OfonoModemPrivate::onCallAdded(QDBusObjectPath path, QVariantMap props)
 void OfonoModemPrivate::onCallRemoved(QDBusObjectPath path)
 {
 	Q_Q(OfonoModem);
+	qCDebug(ofonoModemLog) << "Call removed:" << path.path();
 	m_calls.remove(path.path());
 	emit q->callsChanged(m_calls.values());
 }

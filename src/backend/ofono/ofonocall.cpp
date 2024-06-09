@@ -54,6 +54,7 @@ CutieCall::CallState OfonoCall::state()
 void OfonoCall::answer()
 {
 	Q_D(OfonoCall);
+	qCDebug(ofonoModemLog) << "Answering call" << d->m_path;
 	QDBusInterface("org.ofono", d->m_path, "org.ofono.VoiceCall",
 		       QDBusConnection::systemBus())
 		.call("Answer");
@@ -62,6 +63,7 @@ void OfonoCall::answer()
 void OfonoCall::hangup()
 {
 	Q_D(OfonoCall);
+	qCDebug(ofonoModemLog) << "Hanging up call" << d->m_path;
 	QDBusInterface("org.ofono", d->m_path, "org.ofono.VoiceCall",
 		       QDBusConnection::systemBus())
 		.call("Hangup");
@@ -79,6 +81,7 @@ OfonoCallPrivate::~OfonoCallPrivate()
 void OfonoCallPrivate::onPropertyChanged(QString name, QDBusVariant value)
 {
 	Q_Q(OfonoCall);
+	qCDebug(ofonoModemLog) << "Call property changed:" << name << value.variant();
 	m_data.insert(name, value.variant());
 
 	if ("LineIdentification" == name)
@@ -90,5 +93,6 @@ void OfonoCallPrivate::onPropertyChanged(QString name, QDBusVariant value)
 void OfonoCallPrivate::onDisconnectReason(QString reason)
 {
 	Q_Q(OfonoCall);
+	qCDebug(ofonoModemLog) << "Call disconnected:" << reason;
 	emit q->disconnected(reason);
 }

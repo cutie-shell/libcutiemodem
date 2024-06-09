@@ -2,6 +2,8 @@
 #include "../backend.h"
 #include "ofonomodem_p.h"
 
+Q_DECLARE_LOGGING_CATEGORY(ofonoModemLog)
+
 class OfonoBackend : public Backend {
 	Q_OBJECT
     public:

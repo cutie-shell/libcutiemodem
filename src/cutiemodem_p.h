@@ -7,6 +7,8 @@
 #include <QDBusMetaType>
 #include "cutiemodem.h"
 
+Q_DECLARE_LOGGING_CATEGORY(modemLog)
+
 class CutieModemPrivate : public QObject {
 	Q_OBJECT
 	Q_DECLARE_PUBLIC(CutieModem)

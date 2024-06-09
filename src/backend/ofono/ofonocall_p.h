@@ -7,6 +7,8 @@
 #include <QDBusMetaType>
 #include "../../cutiecall_p.h"
 
+Q_DECLARE_LOGGING_CATEGORY(ofonoModemLog)
+
 class OfonoCall : public CutieCall {
 	Q_OBJECT
 	Q_DECLARE_PRIVATE(OfonoCall)
