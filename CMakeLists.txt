@@ -25,8 +25,20 @@ set(lib_SOURCES
     src/backend/mm/mmmodem_p.h
     src/backend/mm/mmmodem.cpp)
 
+set(plugin_SOURCES
+    src/plugin.cpp src/plugin.h)
+
 qt6_add_library(cutiemodem
     SHARED ${lib_SOURCES}
+)
+
+qt6_add_qml_module(qmlcutiemodemplugin
+    URI Cutie.Modem
+    VERSION ${PROJECT_VERSION}
+    PLUGIN_TARGET qmlcutiemodemplugin
+    NO_GENERATE_PLUGIN_SOURCE
+    SOURCES
+        ${plugin_SOURCES}
 )
 
 set_target_properties(cutiemodem PROPERTIES VERSION ${PROJECT_VERSION})
@@ -39,6 +51,12 @@ target_link_libraries(cutiemodem PUBLIC
     Qt::DBus
 )
 
+target_link_libraries(qmlcutiemodemplugin PUBLIC
+    Qt::Core
+    Qt::Quick
+    cutiemodem
+)
+
 configure_file(src/cutiemodem.pc.in cutiemodem.pc @ONLY)
 
 install(TARGETS cutiemodem
@@ -48,3 +66,11 @@ install(TARGETS cutiemodem
     PUBLIC_HEADER DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}")
 
 install(FILES ${CMAKE_BINARY_DIR}/cutiemodem.pc DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/pkgconfig)
+
+install(TARGETS qmlcutiemodemplugin
+    RUNTIME DESTINATION "${CMAKE_INSTALL_LIBDIR}/qt6/qml/Cutie/Modem"
+    BUNDLE DESTINATION "${CMAKE_INSTALL_LIBDIR}/qt6/qml/Cutie/Modem"
+    LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}/qt6/qml/Cutie/Modem"
+)
+
+install(DIRECTORY src/qml/Cutie/Modem DESTINATION "${CMAKE_INSTALL_LIBDIR}/qt6/qml/Cutie")
