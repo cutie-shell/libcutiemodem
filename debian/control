@@ -22,3 +22,10 @@ Multi-Arch: foreign
 Pre-Depends: ${misc:Pre-Depends}
 Depends: ${misc:Depends}, ${shlibs:Depends}, libcutiemodem (= ${binary:Version})
 Description: This package contains a modem access abstraction library for Cutie. (Development headers)
+
+Package: qml6-module-cutiemodem
+Architecture: any
+Multi-Arch: foreign
+Pre-Depends: ${misc:Pre-Depends}
+Depends: ${misc:Depends}, ${shlibs:Depends}, libcutiemodem (= ${binary:Version})
+Description: This package contains a modem access abstraction library for Cutie. (QML module)
